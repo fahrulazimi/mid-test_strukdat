@@ -32,51 +32,61 @@ void createElement(pointer& pBaru){
 	cout << "Input Asal Daerah : "; cin >> pBaru->asal;
 	pBaru->next = NULL;
 }
-void createGol(pointer& pBaru){
-	cout << "Input GOL : "; cin >> pBaru->gol;
-	pBaru->next = NULL;
+void createGol(List& First, pointer& pBaru){
+	pointer q;
+	q=First;
+	for (int i=0; i<6; i++){
+		cout << "Input GOL : "; cin >> q->gol;
+		q=q->next;
+	}
 }
 
-
-void insertFirst(List& First, pointer pBaru){
+void insertLast(List& First, pointer pBaru){
+	pointer last;
 	if (First==NULL){
 		First=pBaru;
 	}
-	else{
-		pBaru->next=First;
-		First=pBaru;
+	else {
+		last=First;
+		while (last->next!=NULL){
+			last=last->next;
+		}
+		last->next=pBaru;
 	}
 }
 
-void tukar(pointer& a,pointer& b){
-    int temp = a->gol;
-    a->gol = b->gol;
-    b->gol = temp;
-}
-
 void sorting(List& First){
-    int swapped, i;
-    pointer ptr1;
-    pointer lptr = NULL;
-
-    if (First == NULL)
-        return;
-    do{
-        swapped = 0;
-        ptr1 = First;
-
-        while(ptr1->next!=lptr){
-            if (ptr1->gol>ptr1->next->gol){
-                tukar(ptr1,ptr1->next);
-                swapped = 1;
-            }
-            ptr1 = ptr1->next;
-        }
-        lptr = ptr1;
-    } while(swapped);
+    pointer pPindah;
+    for (int i=0; i<6; i++){
+		pPindah = First;
+		for (int j=0; j<5; j++){
+			if(pPindah->gol < pPindah->next->gol){
+			swap(pPindah->tim, pPindah->next->tim);
+			swap(pPindah->asal, pPindah->next->asal);
+			swap(pPindah->gol, pPindah->next->gol);
+			}
+			pPindah = pPindah->next;
+		}
+	}
 }
 
 void traversal(List First){
+	pointer pB;
+    cout<<"\tDAFTAR TIM\n";
+    cout<<"( NO DAFTAR TIM	ASAL DAERAH GOL)\n\n";
+    if (First==NULL){
+        cout<<"    ^^LIST TIM KOSONG^^\n";
+    }
+    else{
+        pB=First;
+        while(pB!=NULL){
+            cout << pB->no << "	" << pB->tim << "	" << pB->asal <<endl;
+            pB=pB->next;
+        }
+    }
+}
+
+void traversalGol(List First){
 	pointer pB;
     cout<<"\tDAFTAR TIM\n";
     cout<<"( NO DAFTAR TIM	ASAL DAERAH GOL)\n\n";
@@ -93,38 +103,16 @@ void traversal(List First){
 }
 
 int main(){
-	pointer p;
+	pointer p,q;
 	List a;
-	int pil;
+	cout << "TIM SEPAK BOLA\n\n";
 	createList(a);
-	do{
-		system("cls");
-		traversal(a);
-		cout << "Menu" <<endl;
-		cout << "1. Insert Tim" <<endl;
-		cout << "2. Update Gol" <<endl;
-		cout << "3. Sorting Gol" <<endl;
-		cout << "4. Exit" <<endl;
-		cout << "Pilih (1-4): "; cin >> pil;
-		switch(pil){
-			case 1 :
-			system("cls");
-			createElement(p);
-			insertFirst(a,p);
-			break;
-			case 2 :
-			createGol(a);
-			case 3 :
-			system("cls");
-			sorting(a);
-			break;
-			case 4 :
-			cout << "^^Terima Kasih Telah Menggunakan Program Ini^^";
-			break;
-			default :
-			cout << "^^ANGKA YANG ANDA INPUT SALAH^^" <<endl;
-			break;
-		}
-	}while(pil!=4);
-	
+	for (int i=0; i<6; i++){
+		createElement(p);
+		insertLast(a,p);
+	}
+	traversal(a);
+	createGol(a,p);
+	sorting(a);
+	traversalGol(a);
 }
